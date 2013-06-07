@@ -17,5 +17,5 @@ class TestUtil(unittest.TestCase):
     url = util.join_url_params("payment", { "count": 1 })
     self.assertEqual(url, "payment?count=1")
     url = util.join_url_params("payment", { "count": 1, "next_id": 4321 })
-    self.assertEqual(url, "payment?count=1&next_id=4321")
+    self.assertTrue(url in ("payment?count=1&next_id=4321", "payment?next_id=4321&count=1"))
 

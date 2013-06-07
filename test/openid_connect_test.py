@@ -1,4 +1,4 @@
-from test_helper import unittest, paypal, client_id
+from test_helper import unittest, paypal, client_id, assert_regex_matches
 from paypalrestsdk.openid_connect import Tokeninfo, Userinfo, authorize_url, logout_url
 
 
@@ -25,27 +25,27 @@ class TestUrls(unittest.TestCase):
 
   def test_authorize_url(self):
     url = authorize_url()
-    self.assertRegexpMatches(url, 'response_type=code')
-    self.assertRegexpMatches(url, 'scope=openid')
-    self.assertRegexpMatches(url, 'client_id=%s'%(client_id))
+    assert_regex_matches(self, url, 'response_type=code')
+    assert_regex_matches(self, url, 'scope=openid')
+    assert_regex_matches(self, url, 'client_id=%s'%(client_id))
 
   def test_authorize_url_options(self):
     url = authorize_url({ 'scope': 'openid profile' })
-    self.assertRegexpMatches(url, 'scope=openid\+profile')
+    assert_regex_matches(self, url, 'scope=openid\+profile')
 
   def test_authorize_url_using_tokeninfo(self):
     url = Tokeninfo.authorize_url({ 'scope': 'openid profile' })
-    self.assertRegexpMatches(url, 'scope=openid\+profile')
+    assert_regex_matches(self, url, 'scope=openid\+profile')
 
   def test_logout_url(self):
     url = logout_url()
-    self.assertRegexpMatches(url, 'logout=true')
+    assert_regex_matches(self, url, 'logout=true')
 
   def test_logout_url_options(self):
     url = logout_url({'id_token': '1234'})
-    self.assertRegexpMatches(url, 'id_token=1234')
+    assert_regex_matches(self, url, 'id_token=1234')
 
   def test_logout_url_using_tokeninfo(self):
     url = Tokeninfo({'id_token': '1234'}).logout_url()
-    self.assertRegexpMatches(url, 'id_token=1234')
+    assert_regex_matches(self, url, 'id_token=1234')
 

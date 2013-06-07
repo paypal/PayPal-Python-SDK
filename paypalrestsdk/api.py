@@ -1,3 +1,5 @@
+from __future__ import division
+
 import httplib2, base64, json
 import logging, datetime, os, platform
 
@@ -59,7 +61,8 @@ class Api:
   # Validate expires_in
   def validate_token_hash(self):
     if self.token_request_at and self.token_hash and self.token_hash.get("expires_in") != None :
-      duration = (datetime.datetime.now() - self.token_request_at).total_seconds()
+      delta = datetime.datetime.now() - self.token_request_at
+      duration = (delta.microseconds + (delta.seconds + delta.days * 24 * 3600) * 10**6) / 10**6
       if duration > self.token_hash.get("expires_in"):
         self.token_hash = None
 
