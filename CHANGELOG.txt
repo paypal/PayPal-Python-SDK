@@ -1,3 +1,6 @@
+Version 0.6.2 - June 21, 2013
+  - Fixed content-type issue with generate_token API
+
 Version 0.6.1 - June 07, 2013
   - Added support for Python 2.6
 
