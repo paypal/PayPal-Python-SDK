@@ -55,6 +55,7 @@ class Api:
       self.token_hash = self.http_call(util.join_url(self.token_endpoint, "/v1/oauth2/token"), "POST",
         body = "grant_type=client_credentials",
         headers = { "Authorization": ("Basic %s" % self.basic_auth()),
+          "Content-Type": "application/x-www-form-urlencoded",
           "Accept": "application/json", "User-Agent": self.user_agent } )
     return self.token_hash
 

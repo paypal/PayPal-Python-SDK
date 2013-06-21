@@ -11,9 +11,12 @@ class TestCreditCard(unittest.TestCase):
       "first_name": "Joe",
       "last_name": "Shopper" }
 
-  def test_create(self):
+  def test_create_and_find(self):
     credit_card = paypal.CreditCard(self.credit_card_attributes)
     self.assertEqual(credit_card.create(), True)
+
+    credit_card = paypal.CreditCard.find(credit_card.id)
+    self.assertEqual(credit_card.__class__, paypal.CreditCard)
 
   def test_delete(self):
     credit_card = paypal.CreditCard(self.credit_card_attributes)
@@ -31,7 +34,3 @@ class TestCreditCard(unittest.TestCase):
     self.assertEqual(new_credit_card.id, credit_card.id)
     self.assertEqual(new_credit_card.request_id, credit_card.request_id)
 
-
-  def test_find(self):
-    credit_card = paypal.CreditCard.find("CARD-5BT058015C739554AKE2GCEI")
-    self.assertEqual(credit_card.__class__, paypal.CreditCard)
