@@ -77,12 +77,34 @@ class TestPayment(unittest.TestCase):
 
 class TestSale(unittest.TestCase):
 
+  def create_sale(self):
+    payment = paypal.Payment({
+      "intent": "sale",
+      "payer": {
+        "payment_method": "credit_card",
+        "funding_instruments": [{
+          "credit_card": {
+            "type": "visa",
+            "number": "4417119669820331",
+            "expire_month": "11",
+            "expire_year": "2018",
+            "cvv2": "874",
+            "first_name": "Joe",
+            "last_name": "Shopper" }}]},
+      "transactions": [{
+        "amount": {
+          "total": "1.00",
+          "currency": "USD" },
+        "description": "This is the payment transaction description." }]})
+    self.assertEqual(payment.create(), True)
+    return payment.transactions[0].related_resources[0].sale
+    
   def test_find(self):
-    sale = paypal.Sale.find("7653841238578312C")
+    sale = paypal.Sale.find(self.create_sale().id)
     self.assertEqual(sale.__class__, paypal.Sale)
 
   def test_refund(self):
-    sale   = paypal.Sale.find("7653841238578312C")
+    sale   = paypal.Sale.find(self.create_sale().id)
     refund = sale.refund({ "amount": { "total": "0.01", "currency": "USD" } })
     self.assertEqual(refund.success(), True)
 
@@ -145,6 +167,13 @@ class TestAuthorization(unittest.TestCase):
 
     capture = paypal.Capture.find(capture.id)
     self.assertEqual(capture.__class__, paypal.Capture)
+
+  def test_reauthorize(self):
+    authorization = paypal.Authorization.find("7GH53639GA425732B")
+    authorization.amount = {
+      "currency": "USD",
+      "total": "7.00" }
+    self.assertEqual(authorization.reauthorize(), False)
 
   def test_capture_refund(self):
     authorization = self.create_authorization()

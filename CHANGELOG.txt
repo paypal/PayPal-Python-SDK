@@ -1,3 +1,6 @@
+Version 0.6.3 - July 31, 2013
+  - Added support for Reauthorization.
+
 Version 0.6.2 - June 21, 2013
   - Fixed content-type issue with generate_token API
 

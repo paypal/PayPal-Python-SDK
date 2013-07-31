@@ -55,6 +55,9 @@ class Authorization(Find, Post):
   def void(self):
     return self.post('void', {}, self)
 
+  def reauthorize(self):
+    return self.post('reauthorize', self, self)
+
 Authorization.convert_resources['authorization'] = Authorization
 
 # == Example

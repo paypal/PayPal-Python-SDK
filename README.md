@@ -4,26 +4,26 @@ The PayPal REST SDK provides Python APIs to create, process and manage payment.
 
 ## Installation
 
+Install using `easy_install`:
+
+```sh
+easy_install paypalrestsdk
+```
+
 Install using `pip`:
 
 ```sh
 pip install paypalrestsdk
 ```
 
-From [Github](https://github.com/paypal/rest-api-sdk-python):
-
-```sh
-pip install git+https://github.com/paypal/rest-api-sdk-python.git
-```
-
 ## Configuration
 
 ```python
 import paypalrestsdk
-paypalrestsdk.configure(
-  mode="sandbox", # sandbox or live
-  client_id="EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
-  client_secret="EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM")
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": "EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
+  "client_secret": "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM" })
 ```
 
 Configure through environment variables:
@@ -42,10 +42,10 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-paypalrestsdk.configure(
-  mode="sandbox", # sandbox or live
-  client_id="EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
-  client_secret="EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM")
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": "EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
+  "client_secret": "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM" })
 
 payment = paypalrestsdk.Payment({
   "intent": "sale",
@@ -112,9 +112,10 @@ For more samples [github.com/paypal/rest-api-sdk-python/tree/master/samples](htt
 import paypalrestsdk
 from paypalrestsdk.openid_connect import Tokeninfo, Userinfo
 
-paypalrestsdk.configure({ "openid_client_id": "CLIENT_ID",
-  'openid_client_secret': "CLIENT_SECRET",
-  'openid_redirect_uri': "http://example.com" })
+paypalrestsdk.configure({
+  "openid_client_id": "LIVE_CLIENT_ID",
+  "openid_client_secret": "LIVE_CLIENT_SECRET",
+  "openid_redirect_uri": "http://example.com" })
 
 # Generate login url
 login_url = Tokeninfo.authorize_url({ "scope": "openid profile"})
