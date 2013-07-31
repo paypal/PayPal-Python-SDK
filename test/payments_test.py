@@ -146,6 +146,13 @@ class TestAuthorization(unittest.TestCase):
     capture = paypal.Capture.find(capture.id)
     self.assertEqual(capture.__class__, paypal.Capture)
 
+  def test_reauthorize(self):
+    authorization = paypal.Authorization.find("7GH53639GA425732B")
+    authorization.amount = {
+      "currency": "USD",
+      "total": "7.00" }
+    self.assertEqual(authorization.reauthorize(), False)
+
   def test_capture_refund(self):
     authorization = self.create_authorization()
     capture = authorization.capture({ "amount": { "currency": "USD", "total": "1.00" } })
