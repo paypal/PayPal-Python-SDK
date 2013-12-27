@@ -1,7 +1,7 @@
 import uuid
 
 import paypalrestsdk.util as util
-import paypalrestsdk.api as api
+from paypalrestsdk.api import default as default_api
 
 
 # Base class for all REST service
@@ -9,7 +9,9 @@ class Resource(object):
 
     convert_resources = {}
 
-    def __init__(self, attributes={}):
+    def __init__(self, attributes={}, api=None):
+        self.__dict__['api'] = api or default_api()
+
         super(Resource, self).__setattr__('__data__', {})
         super(Resource, self).__setattr__('error', None)
         super(Resource, self).__setattr__('headers', {})
@@ -53,14 +55,14 @@ class Resource(object):
 
     # Merge new attributes
     def merge(self, new_attributes):
-        for k in new_attributes:
-            self.__setattr__(k, new_attributes[k])
+        for k,v in new_attributes.iteritems():
+            setattr(self, k, v)
 
     # Convert the attribute values to configured class.
     def convert(self, name, value):
         if isinstance(value, dict):
             cls = self.convert_resources.get(name, Resource)
-            return cls(value)
+            return cls(value, api=self.api)
         elif isinstance(value, list):
             new_list = []
             for obj in value:
@@ -99,9 +101,11 @@ class Resource(object):
 class Find(Resource):
 
     @classmethod
-    def find(cls, resource_id):
+    def find(cls, resource_id, api=None):
+        api = api or default_api()
+
         url = util.join_url(cls.path, str(resource_id))
-        return cls(api.default().get(url))
+        return cls(api.get(url), api=api)
 
 
 # == Example
@@ -110,12 +114,14 @@ class List(Resource):
     list_class = Resource
 
     @classmethod
-    def all(cls, params=None):
+    def all(cls, params=None, api=None):
+        api = api or default_api()
+
         if params is None:
             url = cls.path
         else:
             url = util.join_url_params(cls.path, params)
-        return cls.list_class(api.default().get(url))
+        return cls.list_class(api.get(url), api=api)
 
 
 # == Example
@@ -124,7 +130,7 @@ class List(Resource):
 class Create(Resource):
 
     def create(self):
-        new_attributes = api.default().post(self.path, self.to_dict(), self.http_headers())
+        new_attributes = self.api.post(self.path, self.to_dict(), self.http_headers())
         self.error = None
         self.merge(new_attributes)
         return self.success()
@@ -136,7 +142,7 @@ class Delete(Resource):
 
     def delete(self):
         url = util.join_url(self.path, str(self['id']))
-        new_attributes = api.default().delete(url)
+        new_attributes = self.api.delete(url)
         self.error = None
         self.merge(new_attributes)
         return self.success()
@@ -150,11 +156,12 @@ class Post(Resource):
     def post(self, name, attributes={}, cls=Resource):
         url = util.join_url(self.path, str(self['id']), name)
         if not isinstance(attributes, Resource):
-            attributes = Resource(attributes)
-        new_attributes = api.default().post(url, attributes.to_dict(), attributes.http_headers())
+            attributes = Resource(attributes, api=self.api)
+        new_attributes = self.api.post(url, attributes.to_dict(), attributes.http_headers())
         if isinstance(cls, Resource):
             cls.error = None
             cls.merge(new_attributes)
             return self.success()
         else:
-            return cls(new_attributes)
+            return cls(new_attributes, api=self.api)
+

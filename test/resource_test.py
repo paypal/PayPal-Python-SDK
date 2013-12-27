@@ -1,5 +1,5 @@
 from test_helper import unittest
-from paypalrestsdk.resource import Resource
+from paypalrestsdk.resource import Resource, Find, List, Post
 
 class TestResource(unittest.TestCase):
   def test_getter(self):
@@ -70,12 +70,69 @@ class TestResource(unittest.TestCase):
 
   def test_http_headers(self):
     data = {
-     'name': 'testing',
-     'header': { 'My-Header': 'testing' } }
+      'name': 'testing',
+      'header': { 'My-Header': 'testing' } }
     resource = Resource(data)
     self.assertEqual(resource.header, {'My-Header': 'testing'})
     self.assertEqual(resource.http_headers(), {'PayPal-Request-Id': resource.request_id, 'My-Header': 'testing'})
 
+  def test_passing_api(self):
+    """
+    Check that api objects are passed on to new resources when given
+    """
+    class DummyAPI(object):
+      post = lambda s,*a,**k: {}
+      get = lambda s,*a,**k: {}
 
+    api = DummyAPI()
 
+    # Conversion
+    resource = Resource({
+      'name': 'testing',
+    }, api=api)
+    self.assertEqual(resource.api, api)
+    convert_ret = resource.convert('test', {})
+    self.assertEqual(convert_ret.api, api)
 
+    class TestResource(Find, List, Post):
+      path = '/'
+
+    # Find
+    find = TestResource.find('resourceid', api=api)
+    self.assertEqual(find.api, api)
+
+    # List
+    list_ = TestResource.all(api=api)
+    self.assertEqual(list_.api, api)
+
+    # Post
+    post = TestResource({'id':'id'}, api=api)
+    post_ret = post.post('test')
+    self.assertEqual(post_ret.api, api)
+
+  def test_default_resource(self):
+    from paypalrestsdk import api
+    original = api.__api__
+
+    class DummyAPI(object):
+      post = lambda s,*a,**k: {}
+      get = lambda s,*a,**k: {}
+
+    # Make default api object a dummy api object
+    default = api.__api__ = DummyAPI()
+
+    resource = Resource({})
+    self.assertEqual(resource.api, default)
+
+    class TestResource(Find, List, Post):
+      path = '/'
+
+    # Find
+    find = TestResource.find('resourceid')
+    self.assertEqual(find.api, default)
+
+    # List
+    list_ = TestResource.all()
+    self.assertEqual(list_.api, default)
+
+    api.__api__ = original # Restore original api object

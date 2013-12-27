@@ -44,6 +44,18 @@ export PAYPAL_CLIENT_ID=EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM
 export PAYPAL_CLIENT_SECRET=EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM
 ```
 
+Configure through a non-global Api object
+```python
+import paypalrestsdk
+my_api = paypalrestsdk.Api({
+  'mode': 'sandbox',
+  'client_id': '...',
+  'client_secret': '...'})
+
+payment = paypalrestsdk.Payment({...}, api=my_api)
+
+```
+
 ### Create Payment
 
 ```python
