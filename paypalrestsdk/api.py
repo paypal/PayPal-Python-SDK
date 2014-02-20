@@ -2,7 +2,7 @@ from __future__ import division
 
 import base64
 import datetime
-import httplib2
+import requests
 import json
 import logging
 import os
@@ -16,7 +16,7 @@ from paypalrestsdk.version import __version__
 class Api:
 
     # User-Agent for HTTP request
-    library_details = "httplib2 %s; python %s" % (httplib2.__version__, platform.python_version())
+    library_details = "requests %s; python %s" % (requests.__version__, platform.python_version())
     user_agent = "PayPalSDK/rest-sdk-python %s (%s)" % (__version__, library_details)
         
     def __init__(self, options=None, **args):
@@ -35,7 +35,7 @@ class Api:
         self.client_id = args["client_id"]              # Mandatory parameter, so not using `dict.get`
         self.client_secret = args["client_secret"]      # Mandatory parameter, so not using `dict.get`
         self.ssl_options = args.get("ssl_options", {})
-
+        self.proxies = args.get("proxies", None)
         self.token_hash = None
         self.token_request_at = None
 
@@ -64,7 +64,7 @@ class Api:
         if self.token_hash is None:
             self.token_request_at = datetime.datetime.now()
             self.token_hash = self.http_call(util.join_url(self.token_endpoint, "/v1/oauth2/token"), "POST",
-                body="grant_type=client_credentials",
+                                             data="grant_type=client_credentials",
                 headers={
                     "Authorization": ("Basic %s" % self.basic_auth()),
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -106,7 +106,7 @@ class Api:
             logging.info('PayPal-Request-Id: %s' % (http_headers['PayPal-Request-Id']))
 
         try:
-            return self.http_call(url, method, body=body, headers=http_headers)
+            return self.http_call(url, method, data=body, headers=http_headers)
 
         # Format Error message for bad request
         except BadRequest as error:
@@ -116,7 +116,7 @@ class Api:
         except UnauthorizedAccess as error:
             if(self.token_hash and self.client_id):
                 self.token_hash = None
-                return self.request(url, method, body, headers)
+                return self.request(url, method, data, headers)
             else:
                 raise error
 
@@ -125,17 +125,18 @@ class Api:
         Makes a http call. Logs response information. 
         """
         logging.info('Request[%s]: %s' % (method, url))
-        http = httplib2.Http(**self.ssl_options)
+        #http = httplib2.Http(**self.ssl_options)
         start_time = datetime.datetime.now()
-        response, content = http.request(url, method, **args)
+        r = requests.request(method, url, proxies=self.proxies, **args)
+        response, content = r, r.content
         duration = datetime.datetime.now() - start_time
-        logging.info('Response[%d]: %s, Duration: %s.%ss' % (response.status, response.reason, duration.seconds, duration.microseconds))
+        logging.info('Response[%d]: %s, Duration: %s.%ss' % (response.status_code, response.reason, duration.seconds, duration.microseconds))
         return self.handle_response(response, content.decode('utf-8'))
 
     def handle_response(self, response, content):
         """Validate HTTP response
         """
-        status = response.status
+        status = response.status_code
         if status in (301, 302, 303, 307):
             raise Redirection(response, content)
         elif 200 <= status <= 299:
