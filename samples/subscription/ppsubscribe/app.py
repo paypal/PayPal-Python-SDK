@@ -194,8 +194,21 @@ def admin():
     """If merchant is logged in display billing plans in created and active states
     """
     if session.get('logged_in') and session.get('merchant'):
-        plans_created = BillingPlan.all({"status": "CREATED", "sort_order": "DESC"})['plans']
-        plans_active = BillingPlan.all({"status": "ACTIVE", "sort_order": "DESC"})['plans']
+        plans_created_query_dict = BillingPlan.all({"status": "CREATED",
+                                    "sort_order": "DESC"})
+        if plans_created_query_dict:
+            plans_created = plans_created_query_dict.to_dict().get('plans')
+
+        else:
+            plans_created = []
+
+        plans_active_query_dict = BillingPlan.all({"status": "ACTIVE",
+                "sort_order": "DESC"})
+        if plans_active_query_dict:
+            plans_active = plans_active_query_dict.to_dict().get('plans')
+        else:
+            plans_active = []
+
         return render_template('admin.html', plans_created=plans_created, plans_active=plans_active)
     else:
         return redirect(url_for('login'))
@@ -207,7 +220,14 @@ def subscriptions():
     descending order of creation time
     """
     if session.get('logged_in') and session.get('customer'):
-        plans_active = BillingPlan.all({"status": "ACTIVE", "sort_order": "DESC"})['plans']
+
+        plans_active_query_dict = BillingPlan.all({"status": "ACTIVE",
+                              "sort_order": "DESC"})
+
+        if plans_active_query_dict:
+            plans_active = plans_active_query_dict.to_dict().get('plans')
+        else:
+            plans_active = []
         return render_template('subscriptions.html', plans=plans_active)
     else:
         return redirect(url_for('login'))
