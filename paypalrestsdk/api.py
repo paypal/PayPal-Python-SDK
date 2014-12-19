@@ -162,6 +162,7 @@ class Api(object):
 
         duration = datetime.datetime.now() - start_time
         logging.info('Response[%d]: %s, Duration: %s.%ss.' % (response.status_code, response.reason, duration.seconds, duration.microseconds))
+        logging.debug('Response Content: %s' % (response.content))
         debug_id = response.headers.get('PayPal-Debug-Id')
         if debug_id:
             logging.debug('debug_id: %s' % debug_id)
