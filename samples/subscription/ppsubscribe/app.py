@@ -127,7 +127,7 @@ def subscribe():
         billing_agreement = BillingAgreement({
             "name": "Organization plan name",
             "description": "Agreement for " + request.args.get('name', ''),
-            "start_date": (datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "start_date": (datetime.utcnow() + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%SZ'),
             "plan": {
                 "id": request.args.get('id', '')
             },
