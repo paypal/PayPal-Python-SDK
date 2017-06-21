@@ -1,9 +1,13 @@
 import paypalrestsdk
 from paypalrestsdk.openid_connect import Tokeninfo
 
-paypalrestsdk.configure({'openid_client_id': 'CLIENT_ID',
-                         'openid_client_secret': 'CLIENT_SECRET',
-                         'openid_redirect_uri': 'http://example.com'})
+paypalrestsdk.configure({
+    'client_id': 'CLIENT_ID',
+    'client_secret': 'CLIENT_SECRET',
+    'openid_client_id': 'CLIENT_ID',
+    'openid_client_secret': 'CLIENT_SECRET',
+    'openid_redirect_uri': 'http://example.com'
+})
 
 login_url = Tokeninfo.authorize_url({'scope': 'openid profile'})
 

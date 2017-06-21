@@ -1,13 +1,13 @@
-from paypalrestsdk.resource import Resource
 import paypalrestsdk.util as util
+from paypalrestsdk.resource import Resource
 from paypalrestsdk.api import default as default_api
+from paypalrestsdk.api import Api
 from paypalrestsdk.config import __version__
 from six import string_types
 
-
 class Base(Resource):
 
-    user_agent = "PayPalSDK/openid-connect-python %s (%s)" % (__version__, default_api.Api.library_details)
+    user_agent = "PayPalSDK/openid-connect-python %s (%s)" % (__version__, Api.library_details)
 
     @classmethod
     def post(cls, action, options=None, headers=None, api=None):
