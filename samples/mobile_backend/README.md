@@ -26,7 +26,7 @@ Get your client credentials from https://developer.paypal.com/ and put them in a
     // * Running on http://0.0.0.0:8000/
     // * Restarting with reloader
 
-## Verify a paypal or credit card payment
+## Verify a paypal payment
 
 ```bash
 curl -X POST http://0.0.0.0:8000/client_responses \
