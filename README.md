@@ -81,35 +81,40 @@ paypalrestsdk.configure({
   "client_secret": "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM" })
 
 payment = paypalrestsdk.Payment({
-  "intent": "sale",
-  "payer": {
-    "payment_method": "credit_card",
-    "funding_instruments": [{
-      "credit_card": {
-        "type": "visa",
-        "number": "4417119669820331",
-        "expire_month": "11",
-        "expire_year": "2018",
-        "cvv2": "874",
-        "first_name": "Joe",
-        "last_name": "Shopper" }}]},
-  "transactions": [{
-    "item_list": {
-      "items": [{
-        "name": "item",
-        "sku": "item",
-        "price": "1.00",
-        "currency": "USD",
-        "quantity": 1 }]},
-    "amount": {
-      "total": "1.00",
-      "currency": "USD" },
-    "description": "This is the payment transaction description." }]})
+    "intent": "sale",
+    "payer": {
+        "payment_method": "paypal"},
+    "redirect_urls": {
+        "return_url": "http://localhost:3000/payment/execute",
+        "cancel_url": "http://localhost:3000/"},
+    "transactions": [{
+        "item_list": {
+            "items": [{
+                "name": "item",
+                "sku": "item",
+                "price": "5.00",
+                "currency": "USD",
+                "quantity": 1}]},
+        "amount": {
+            "total": "5.00",
+            "currency": "USD"},
+        "description": "This is the payment transaction description."}]})
 
 if payment.create():
   print("Payment created successfully")
 else:
   print(payment.error)
+```
+
+### Execute Payment
+
+```python
+payment = paypalrestsdk.Payment.find("PAY-57363176S1057143SKE2HO3A")
+
+if payment.execute({"payer_id": "DUFRQ8GWYMJXC"}):
+  print("Payment execute successfully")
+else:
+  print(payment.error) # Error Hash
 ```
 
 ### Get Payment details
@@ -121,19 +126,6 @@ payment = paypalrestsdk.Payment.find("PAY-57363176S1057143SKE2HO3A")
 # Get List of Payments
 payment_history = paypalrestsdk.Payment.all({"count": 10})
 payment_history.payments
-```
-
-### Execute Payment
-
-Only for [Payment](https://github.com/paypal/PayPal-Python-SDK/blob/master/samples/payment/create_with_paypal.py) with `payment_method` as `"paypal"`
-
-```python
-payment = paypalrestsdk.Payment.find("PAY-57363176S1057143SKE2HO3A")
-
-if payment.execute({"payer_id": "DUFRQ8GWYMJXC"}):
-  print("Payment execute successfully")
-else:
-  print(payment.error) # Error Hash
 ```
 
 ### Subscription
