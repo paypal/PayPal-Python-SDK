@@ -8,6 +8,19 @@ try:
 except ImportError:
     from urllib import urlencode
 
+CLASS_MAPPING_TABLE = {
+    'payouts_item': 'paypalrestsdk.payments.PayoutItem',
+    'payouts': 'paypalrestsdk.payments.Payout',
+    'plan': 'paypalrestsdk.payments.BillingPlan',
+    'agreement': 'paypalrestsdk.payments.BillingAgreement',
+    'invoices': 'paypalrestsdk.invoices.Invoice',
+    'dispute': 'paypalrestsdk.resource.Resource',  # not mapped ?
+    'authorization_consent_revoked': 'paypalrestsdk.resource.Resource',  # not mapped ?
+    'merchant-onboarding': 'paypalrestsdk.resource.Resource',  # not mapped ?
+    'partner-consent': 'paypalrestsdk.resource.Resource',  # not mapped ?
+    'vault-credit-card': 'paypalrestsdk.resource.Resource'  # not mapped ?
+}
+
 
 def join_url(url, *paths):
     """
@@ -67,5 +80,8 @@ def get_member(name):
     """
     resource_class_dict = dict((k.lower(), ("{0}.{1}".format(v.__module__, k)))
                                for k, v in inspect.getmembers(paypalrestsdk, inspect.isclass))
-    klass = locate(resource_class_dict[name.lower()])
+    try:
+        klass = locate(resource_class_dict[name.lower()])
+    except:
+        klass = locate(CLASS_MAPPING_TABLE[name.lower()])
     return klass
