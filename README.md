@@ -14,7 +14,7 @@ The PayPal REST SDK provides Python APIs to create, process and manage payment. 
 
 > **TLSv1_2 warning: Due to PCI compliance, merchant servers using a version of TLS that does not support TLSv1_2 will receive a warning.
 
-> **To verify that your server supports PCI compliant version of TLS, run [this sample](/samples/payment/create_with_paypal_security_test.py) with your sandbox client_id and client_secret.
+> **To verify that your server supports PCI compliant version of TLS, test against the PayPal sandbox environment which uses TLS 1.2.
 
 ## System Requirements
 PayPal SDK depends on the following system libraries:
