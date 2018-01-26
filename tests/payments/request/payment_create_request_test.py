@@ -27,8 +27,8 @@ def createPayment(client, intent, payment_method="credit_card", invoice_number=N
             }
         }],
         "redirect_urls": {
-            "cancel_url": "http://paypal.com/cancel",
-            "return_url": "http://paypal.com/return"
+            "cancel_url": "http://example.com/cancel",
+            "return_url": "http://example.com/return"
         }
     }
 
