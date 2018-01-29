@@ -74,7 +74,7 @@ class PayPalHttpClientTest(PayPalTestHarness):
 
         expectedauthheader ="Basic {0}".format(base64.b64encode(("{0}:{1}".format(self.environment().client_id, self.environment().client_secret)).encode()).decode())
         self.assertEqual(expectedauthheader, accesstokenrequest.headers["Authorization"])
-        self.assertEqual("grant_type=client_credentials&refresh_token=refresh-token", accesstokenrequest.body)
+        self.assertEqual("grant_type=refresh_token&refresh_token=refresh-token", accesstokenrequest.body)
 
     @responses.activate
     def testPayPalHttpClient_execute_setsCommonHeaders_signsRequest(self):

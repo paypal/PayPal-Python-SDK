@@ -5,7 +5,7 @@ class AccessTokenRequest:
         self.verb = "POST"
         self.body = "grant_type=client_credentials"
         if refresh_token:
-            self.body += "&refresh_token={0}".format(refresh_token)
+            self.body = "grant_type=refresh_token&refresh_token={0}".format(refresh_token)
 
         self.headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
