@@ -1,4 +1,4 @@
 ---
-language: py
+language: python
 sourcePath: paypalrestsdk
 testPath: tests
