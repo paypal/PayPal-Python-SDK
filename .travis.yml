@@ -6,12 +6,12 @@ addons:
       - openssl
 language: python
 python:
-- '2.7'
-- '3.3'
-- '3.4'
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6'
 install:
-- pip install -r requirements.txt
-- openssl version -a
+  - pip install -r requirements.txt
+  - openssl version -a
 script:
-- nosetests --with-coverage --cover-package=paypalrestsdk --include=paypalrestsdk/* --exclude=functional*
-
+  - nosetests --with-coverage --cover-package=paypalrestsdk --include=paypalrestsdk/* --exclude=functional*
