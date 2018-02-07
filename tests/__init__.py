@@ -1,3 +1,3 @@
 from tests.testharness import *
-from core import *
-from v1 import *
+from tests.core import *
+from tests.v1 import *
