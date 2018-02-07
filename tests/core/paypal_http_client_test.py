@@ -56,6 +56,20 @@ class PayPalHttpClientTest(PayPalTestHarness):
         self.assertEqual(self.environment().base_url + "/v1/oauth2/token", accesstokenrequest.url)
 
     @responses.activate
+    def testPayPalHttpClient_execute_doesNotFetchAccessTokenIfAuthorizationHeaderAlreadyPresent(self):
+        request = SimpleRequest("/", "POST")
+        request.headers["Authorization"] = "custom-header-value";
+        self.stub_request_with_response(request)
+
+        self.client.execute(request)
+
+        self.assertEqual(1, len(responses.calls))
+
+        actualRequest = responses.calls[0].request
+        self.assertEqual(self.environment().base_url + "/", actualRequest.url)
+        self.assertEqual("custom-header-value", actualRequest.headers["Authorization"])
+
+    @responses.activate
     def testPayPalHttpClient_withRefreshToken_fetchesAccessTokenWithRefreshToken(self):
         request = SimpleRequest("/", "POST")
         self.stub_request_with_response(request)
