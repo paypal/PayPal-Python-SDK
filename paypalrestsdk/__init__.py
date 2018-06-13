@@ -1,5 +1,5 @@
 from paypalrestsdk.api import Api, set_config, configure
-from paypalrestsdk.payments import Payment, Sale, Refund, Authorization, Capture, BillingPlan, BillingAgreement, Order, Payout, PayoutItem
+from paypalrestsdk.payments import Payment, Sale, Refund, Authorization, Capture, BillingPlan, BillingAgreement, Order, Payout, PayoutItem, Agreement, AgreementToken
 from paypalrestsdk.payment_experience import WebProfile
 from paypalrestsdk.notifications import Webhook, WebhookEvent, WebhookEventType
 from paypalrestsdk.invoices import Invoice
