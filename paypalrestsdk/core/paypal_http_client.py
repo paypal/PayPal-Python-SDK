@@ -29,7 +29,7 @@ class PayPalHttpClient(HttpClient):
         if "Accept-Encoding" not in request.headers:
             request.headers["Accept-Encoding"] = "gzip"
 
-        if not isinstance(request, AccessTokenRequest) and not isinstance(request, RefreshTokenRequest):
+        if "Authorization" not in request.headers and not isinstance(request, AccessTokenRequest) and not isinstance(request, RefreshTokenRequest):
             if not self._access_token or self._access_token.is_expired():
                 accesstokenresult = self.execute(AccessTokenRequest(self.environment, self._refresh_token)).result
                 self._access_token = AccessToken(access_token=accesstokenresult.access_token,

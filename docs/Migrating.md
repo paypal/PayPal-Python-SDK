@@ -9,9 +9,11 @@ paypalrestsdk.configure(client_id, client_secret)
 
 #### AFTER
 ```py
-env = paypalrestsdk.PayPalEnvironment(client_id, client_secret, mode=paypalrestsdk.PayPalEnvironment.SANDBOX)
-                                      
-client = paypalrestsdk.PayPalHttpClient(environment=env)
+import paypalrestsdk.core as paypal
+
+env = paypal.environment.SandboxEnvironment(client_id, client_secret)
+
+client = paypal.paypal_http_client.PayPalHttpClient(environment=env)
 ```
 
 # 2. Make a call
@@ -27,7 +29,7 @@ payment = Payment({
     "intent": "sale",
     ...
   })
-  
+
 if payment.create():
     print("Payment[%s] created successfully" % (payment.id))
 else:
@@ -37,8 +39,10 @@ else:
 
 #### AFTER
 ```py
-payment_create_request = paypalrestsdk.PaymentCreateRequest()
-payment_create_request.body({
+import paypalrestsdk.v1.payments as payments
+
+payment_create_request = payments.PaymentCreateRequest()
+payment_create_request.request_body({
     "payer": {
         "payment_method": "paypal"
     },

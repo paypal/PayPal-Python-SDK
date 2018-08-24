@@ -25,20 +25,21 @@ For e.g.
 > Retries are now much more simple. If your request fails for some reason and you want to try again, just resubmit the same HttpRequest object.
 
 ```py
-import paypalrestsdk
+import paypalrestsdk.core as paypal
+import paypalrestsdk.v1.payments as payments
 
-env = paypalrestsdk.PayPalEnvironment(client_id="AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS",
-                                      client_secret="EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL",
-                                      mode=paypalrestsdk.PayPalEnvironment.SANDBOX)
+client_id = "AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS"
+client_secret = "EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL"
+env = paypal.environment.SandboxEnvironment(client_id, client_secret)
 
-client = paypalrestsdk.PayPalHttpClient(environment=env)
+client = paypal.paypal_http_client.PayPalHttpClient(environment=env)
 
 retry = 0
 result = None
 
-request = paypalrestsdk.PaymentCreateRequest()
-request.headers['PayPal-Request-ID"] = "abcd-request-id"
-request.body({ ... })
+request = payments.PaymentCreateRequest()
+request.headers['PayPal-Request-ID'] = "abcd-request-id"
+request.request_body({ ... })
 
 while not result and retry < 3:
     try:

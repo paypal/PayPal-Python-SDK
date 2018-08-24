@@ -4,19 +4,25 @@ This is a preview of how PayPal SDKs will look in the next major version. We've 
 simple model objects and blueprints for HTTP calls. This repo currently only contains functionality for working with payments and invoices
 to serve as an example and early beta of the API going forward.
 
+## What's New
+
+Please see the [CHANGELOG.md](./CHANGELOG.md) for the latest changes.
+
 ### Creating a Payment
 
 ```python
-import paypalrestsdk
+import paypalrestsdk.core as paypal
+import paypalrestsdk.v1.payments as payments
 import braintreehttp
 
-env = paypalrestsdk.SandboxEnvrironment(client_id="AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS",
-                                      client_secret="EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL")
+client_id = "AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS"
+client_secret = "EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL"
+env = paypal.environment.SandboxEnvironment(client_id, client_secret)
 
-client = paypalrestsdk.PayPalHttpClient(environment=env)
+client = paypal.paypal_http_client.PayPalHttpClient(environment=env)
 
-payment_create_request = paypalrestsdk.PaymentCreateRequest()
-payment_create_request.body({
+payment_create_request = payments.PaymentCreateRequest()
+payment_create_request.request_body({
     "payer": {
         "payment_method": "paypal"
     },
@@ -28,8 +34,8 @@ payment_create_request.body({
         }
     }],
     "redirect_urls": {
-        "cancel_url": "http://paypal.com/cancel",
-        "return_url": "http://paypal.com/return"
+        "cancel_url": "https://example.com/cancel",
+        "return_url": "https://example.com/return"
     }
 })
 
@@ -51,7 +57,7 @@ If you're migrating from v1, check out our [Migration Guide](./docs/Migrating.md
 
 ## Building
 
-To try this out, update the version of `paypalrestsdk` in your `requirements.txt` to `2.0.0b1`:
+To try this out, update the version of `paypalrestsdk` in your `requirements.txt` to `2.0.0rc2`:
 
 Please feel free to create an issue in this repo with any feedback, questions, or concerns you have.
 
@@ -59,7 +65,8 @@ Please feel free to create an issue in this repo with any feedback, questions, o
 
 To run integration tests using your client id and secret, clone this repository and run the following command:
 ```sh
-$ PAYPAL_CLIENT_ID=your_client_id PAYPAL_CLIENT_SECRET=your_client_secret python -m unittest paypalrestsdk.core.test tests
+$ pip install nose # if not already installed
+$ PAYPAL_CLIENT_ID=your_client_id PAYPAL_CLIENT_SECRET=your_client_secret nosetests --exe
 ```
 
 You may use the client id and secret above for demonstration purposes.

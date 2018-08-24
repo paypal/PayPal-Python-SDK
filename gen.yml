@@ -1,4 +1,6 @@
 ---
-language: py
+language: python
 sourcePath: paypalrestsdk
 testPath: tests
+projectName: paypalrestsdk
+apiVersioning: true
