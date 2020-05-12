@@ -27,7 +27,7 @@ Please note that if you are integrating with PayPal Checkout, this SDK and corre
 We recommend that you integrate with API [v2/checkout/orders](https://developer.paypal.com/docs/api/orders/v2/) and [v2/payments](https://developer.paypal.com/docs/api/payments/v2/). Please refer to the [Checkout Python SDK](https://github.com/paypal/Checkout-Python-SDK) to continue with the integration.
 
 ## 2.0 Release Candidate!
-We're releasing a [brand new version of our SDK!](https://github.com/paypal/PayPal-python-SDK/tree/2.0-beta) 2.0 is currently at release candidate status, and represents a full refactor, with the goal of making all of our APIs extremely easy to use. 2.0 includes all of the existing APIs (except payouts), and includes the new Orders API (disputes and Marketplace coming soon). Check out the [FAQ and migration guide](https://github.com/paypal/PayPal-python-SDK/tree/2.0-beta/docs), and let us know if you have any suggestions or issues!
+We're releasing a [brand new version of our SDK!](https://github.com/paypal/PayPal-python-SDK/tree/2.0-beta) 2.0 is currently at release candidate status, and represents a full refactor, with the goal of making all of our APIs extremely easy to use. 2.0 includes all of the existing APIs, and includes the new Orders API (disputes and Marketplace coming soon). Check out the [FAQ and migration guide](https://github.com/paypal/PayPal-python-SDK/tree/2.0-beta/docs), and let us know if you have any suggestions or issues!
 
 ## System Requirements
 PayPal SDK depends on the following system libraries:
