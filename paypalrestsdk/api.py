@@ -209,7 +209,7 @@ class Api(object):
             log.debug('debug_id: %s' % debug_id)
         if self.mode.lower() != 'live':
             log.debug('Headers: %s\nBody: %s' % (
-                str(response.headers), str(response.content)))
+                str(response.headers), response.content.decode('utf-8')))
 
         return self.handle_response(response, response.content.decode('utf-8'))
 
