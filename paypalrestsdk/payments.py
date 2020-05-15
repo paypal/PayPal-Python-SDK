@@ -122,6 +122,48 @@ BillingAgreement.convert_resources['billingagreement'] = BillingAgreement
 BillingAgreement.convert_resources['billingagreements'] = BillingAgreement
 
 
+class AgreementToken(Create, Find):
+    """
+    The merchant creates a billing agreement token. This call returns an approval URL, to which the merchant
+    redirects the customer.
+    The customer logs in to PayPal one time to approve the agreement and select a funding instrument. After that,
+    PayPal does not require the customer to log in again.
+    If the customer approves the agreement, he or she is redirected to the return URL that the merchant specified
+    during billing agreement token creation.
+
+    https://developer.paypal.com/docs/limited-release/reference-transactions/#create-billing-agreement-token
+
+    Usage::
+
+        >>> agreement_token = AgreementToken.find("<AGREEMENT_ID>")
+    """
+    path = "v1/billing-agreements/agreement-tokens"
+
+AgreementToken.convert_resources['agreementtoken'] = AgreementToken
+AgreementToken.convert_resources['agreementtokens'] = AgreementToken
+
+
+class Agreement(Create, Find, Update):
+    """
+    After buyer approval, you use a billing agreement token to create the agreement.
+
+    The merchant uses the billing agreement token to create the agreement.
+    This call returns a billing agreement ID. PayPal maintains the agreement.
+
+    https://developer.paypal.com/docs/limited-release/reference-transactions/#create-billing-agreement
+
+    Usage::
+
+        >>> agreement = Agreement.find("<AGREEMENT_ID>")
+    """
+    path = "v1/billing-agreements/agreements"
+
+    def cancel(self, attributes):
+        return self.post('cancel', attributes, self)
+
+Agreement.convert_resources['agreement'] = Agreement
+Agreement.convert_resources['agreements'] = Agreement
+
 class Sale(Find, Post):
     """Sale class wrapping the REST v1/payments/sale endpoint
 
