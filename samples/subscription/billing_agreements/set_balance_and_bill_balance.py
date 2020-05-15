@@ -9,7 +9,7 @@ try:
         billing_agreement.id, billing_agreement.outstanding_balance.value))
 
     outstanding_amount = {
-        "value": "10",
+        "value": "4500",
         "currency": "USD"
     }
 
