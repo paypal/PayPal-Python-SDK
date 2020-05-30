@@ -142,13 +142,13 @@ class List(Resource):
 
 class Create(Resource):
 
-    def create(self, refresh_token=None, correlation_id=None):
+    def create(self, refresh_token=None, correlation_id=None, return_result=False):
         """Creates a resource e.g. payment
 
         Usage::
 
             >>> payment = Payment({})
-            >>> payment.create() # return True or False
+            >>> payment.create() # return Boolean or Response depands on parameter return_result
         """
 
         headers = {}
@@ -163,6 +163,10 @@ class Create(Resource):
         new_attributes = self.api.post(self.path, self.to_dict(), headers, refresh_token)
         self.error = None
         self.merge(new_attributes)
+
+        if return_result:
+            return new_attributes
+
         return self.success()
 
 
