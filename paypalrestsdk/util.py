@@ -18,9 +18,10 @@ def join_url(url, *paths):
         >>> util.join_url("example.com", "index.html")
         'example.com/index.html'
     """
-    for path in paths:
-        url = re.sub(r'/?$', re.sub(r'^/?', '/', path), url)
-    return url
+    result = '/'.join(chunk.strip('/') for chunk in [url] + list(paths))
+    if url.startswith('/'):
+        result = '/' + result
+    return result
 
 
 def join_url_params(url, params):
