@@ -1,5 +1,6 @@
 from test_helper import unittest, client_id, client_secret, paypal
 from mock import Mock, patch, ANY
+from paypalrestsdk.config import __default_timeout__
 
 
 class Api(unittest.TestCase):
@@ -76,9 +77,21 @@ class Api(unittest.TestCase):
             'token_type': 'Bearer'
         }
         old_token = self.api.get_access_token()
-        mock.assert_called_once_with(self.api, 'https://api.sandbox.paypal.com/v1/oauth2/token', 'POST', headers=ANY, data='grant_type=client_credentials')
+        mock.assert_called_once_with(self.api,
+                                     'https://api.sandbox.paypal.com/v1/oauth2/token',
+                                     'POST',
+                                     headers=ANY,
+                                     data='grant_type=client_credentials',
+                                     timeout=__default_timeout__
+                                     )
         old_token = self.api.get_access_token()
-        mock.assert_called_once_with(self.api, 'https://api.sandbox.paypal.com/v1/oauth2/token', 'POST', headers=ANY, data='grant_type=client_credentials')
+        mock.assert_called_once_with(self.api,
+                                     'https://api.sandbox.paypal.com/v1/oauth2/token',
+                                     'POST',
+                                     headers=ANY,
+                                     data='grant_type=client_credentials',
+                                     timeout=__default_timeout__,
+                                     )
 
         self.api.token_hash["expires_in"] = 0
         new_token = self.api.get_access_token()
@@ -108,7 +121,8 @@ class Api(unittest.TestCase):
                                               'Accept': 'application/json',
                                               'Authorization': 'Basic ' + self.api.basic_auth(),
                                               'User-Agent': ANY
-                                          }
+                                          },
+                                          timeout=__default_timeout__
                                           )
         self.assertEqual(refresh_token, self.refresh_token)
 
@@ -139,6 +153,7 @@ class Api(unittest.TestCase):
                                               'Authorization': 'Basic ' + self.api.basic_auth(),
                                               'User-Agent': ANY,
                                               'test-header': 'test-value'
-                                          }
+                                          },
+                                          timeout=__default_timeout__
                                           )
         self.assertEqual(access_token, self.access_token)

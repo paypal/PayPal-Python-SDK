@@ -11,7 +11,7 @@ import ssl
 
 import paypalrestsdk.util as util
 from paypalrestsdk import exceptions
-from paypalrestsdk.config import __version__, __endpoint_map__
+from paypalrestsdk.config import __default_timeout__, __version__, __endpoint_map__
 
 log = logging.getLogger(__name__)
 
@@ -62,6 +62,8 @@ class Api(object):
 
         self.options = kwargs
 
+        self.timeout = kwargs.get("timeout", __default_timeout__)
+
     def default_endpoint(self):
         return __endpoint_map__.get(self.mode)
 
@@ -107,7 +109,9 @@ class Api(object):
                 "Authorization": ("Basic %s" % self.basic_auth()),
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json", "User-Agent": self.user_agent
-            }, headers or {}))
+            }, headers or {}),
+            timeout=__default_timeout__
+        )
 
         if refresh_token is None and authorization_code is None:
             # cache token for re-use in normal case
@@ -168,7 +172,7 @@ class Api(object):
         self._check_openssl_version()
 
         try:
-            return self.http_call(url, method, data=json.dumps(body), headers=http_headers)
+            return self.http_call(url, method, data=json.dumps(body), headers=http_headers, timeout=self.timeout)
 
         # Format Error message for bad request
         except exceptions.BadRequest as error:
@@ -182,7 +186,7 @@ class Api(object):
             else:
                 raise error
 
-    def http_call(self, url, method, **kwargs):
+    def http_call(self, url, method, timeout=__default_timeout__, **kwargs):
         """Makes a http call. Logs response information.
         """
         log.info('Request[%s]: %s' % (method, url))
@@ -199,7 +203,7 @@ class Api(object):
 
         start_time = datetime.datetime.now()
         response = requests.request(
-            method, url, proxies=self.proxies, **kwargs)
+            method, url, proxies=self.proxies, timeout=timeout, **kwargs)
         duration = datetime.datetime.now() - start_time
         log.info('Response[%d]: %s, Duration: %s.%ss.' % (
             response.status_code, response.reason, duration.seconds, duration.microseconds))

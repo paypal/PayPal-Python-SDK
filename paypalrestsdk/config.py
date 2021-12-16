@@ -7,3 +7,4 @@ __endpoint_map__ = {
     "live": "https://api.paypal.com",
     "sandbox": "https://api.sandbox.paypal.com"
 }
+__default_timeout__ = 300

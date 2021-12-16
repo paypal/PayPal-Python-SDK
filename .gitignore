@@ -12,3 +12,4 @@ MANIFEST
 .tox/
 .DS_Store
 .idea
+venv/
