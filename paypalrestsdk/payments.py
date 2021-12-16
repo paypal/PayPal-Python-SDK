@@ -226,7 +226,7 @@ class Payout(Create, Find):
     Usage::
         >>> payout = Payout.find("<PAYOUT_ID>")
     """
-    path = '/v1/payments/payouts/'
+    path = '/v1/payments/payouts'
 
     def create(self, sync_mode=False, **kwargs):
         """Creates a payout resource
@@ -245,7 +245,7 @@ class PayoutItem(Find, Post):
     Usage::
         >>> payout = Payout.find("<PAYOUT_ID>")
     """
-    path = '/v1/payments/payouts-item/'
+    path = '/v1/payments/payouts-item'
 
     def cancel(self):
         return self.post('cancel', {}, self, fieldname='payout_item_id')

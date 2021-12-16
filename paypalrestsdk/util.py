@@ -13,6 +13,10 @@ def join_url(url, *paths):
     """
     Joins individual URL strings together, and returns a single string.
 
+    Note: works only with paths that don't end in a trailing slash!
+    join_url('v1/foo/', 'var') -> 'v1/foo/bar/bar'
+    https://docs.python.org/3.7/library/re.html#re.sub
+    Changed in version 3.7: Empty matches for the pattern are replaced when adjacent to a previous non-empty match.
     Usage::
 
         >>> util.join_url("example.com", "index.html")

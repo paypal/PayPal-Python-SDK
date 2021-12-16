@@ -15,7 +15,7 @@ class Webhook(Create, Find, List, Delete, Replace):
 
         >>> web_profile = WebProfile.find("XP-3NWU-L5YK-X5EC-6KJM")
     """
-    path = "/v1/notifications/webhooks/"
+    path = "/v1/notifications/webhooks"
 
     def get_event_types(self, api=None):
         """Get the list of events types that are subscribed to a webhook
@@ -28,7 +28,7 @@ class Webhook(Create, Find, List, Delete, Replace):
 class WebhookEvent(Find, List, Post):
     """Exposes REST endpoints for working with subscribed webhooks events
     """
-    path = "/v1/notifications/webhooks-events/"
+    path = "/v1/notifications/webhooks-events"
     __root_cert_path = "data/DigiCertHighAssuranceEVRootCA.crt.pem"
     __intermediate_cert_path = "data/DigiCertSHA2ExtendedValidationServerCA.crt.pem"
     __cert_chain_path = [__root_cert_path, __intermediate_cert_path]
@@ -153,4 +153,4 @@ class WebhookEvent(Find, List, Post):
 class WebhookEventType(List):
     """Exposes REST endpoint for listing available event types for webhooks
     """
-    path = "/v1/notifications/webhooks-event-types/"
+    path = "/v1/notifications/webhooks-event-types"
